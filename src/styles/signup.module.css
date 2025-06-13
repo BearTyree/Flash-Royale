@@ -1,0 +1,51 @@
+#content {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.container {
+  padding: 2rem;
+  background-color: #363535;
+  border-radius: 1rem;
+  border: #676767 solid 1px;
+}
+
+.container form input {
+  background-color: white;
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
+  color: black;
+}
+
+.container form {
+  text-align: center;
+}
+
+.container h2 {
+  text-align: center;
+  color: white;
+  font-family: "Lato", sans-serif;
+}
+
+.container p {
+  text-align: center;
+  color: white;
+  font-family: "Lato", sans-serif;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+.container button {
+  color: white;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  border-radius: 1rem;
+  border: none;
+  background-color: #595959;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.container button:hover {
+  background-color: #676767;
+}

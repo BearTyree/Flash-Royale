@@ -1,0 +1,54 @@
+#menuContent {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+#menuContent h1 {
+  font-size: 4rem;
+}
+
+.roomsContainer {
+  width: 30rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 1rem;
+  border-radius: 1rem;
+  background-color: #484848;
+  gap: 1rem;
+}
+
+.roomsContainer p {
+  font-style: italic;
+}
+
+.roomsList {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1rem;
+  background-color: #363535;
+  border-radius: 1rem;
+  overflow: scroll;
+  gap: 0.5rem;
+}
+
+.roomsContainer button {
+  font-size: 0.75rem;
+  box-sizing: border-box;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  background-color: #005994;
+  border: none;
+  border-radius: 1rem;
+  cursor: pointer;
+}
+
+.roomsContainer button:hover {
+  background-color: #0071bd;
+}
