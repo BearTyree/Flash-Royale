@@ -28,6 +28,8 @@
   box-sizing: border-box;
   padding: 1rem;
   cursor: pointer;
+  background-color: transparent;
+  border: none;
 }
 
 .headerLink:hover {
