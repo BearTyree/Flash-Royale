@@ -33,7 +33,7 @@ export async function authenticate(previousState, formData) {
 
   cookieStore.set({
     name: "token",
-    value: generateToken(username),
+    value: await generateToken(username),
     httpOnly: true,
     sameSite: "strict",
     maxAge: 60 * 60 * 24 * 2, // 2 days
@@ -78,7 +78,7 @@ export async function createUser(previousState, formData) {
 
     cookieStore.set({
       name: "token",
-      value: generateToken(username),
+      value: await generateToken(username),
       httpOnly: true,
       sameSite: "strict",
       maxAge: 60 * 60 * 24 * 2, // 2 days
