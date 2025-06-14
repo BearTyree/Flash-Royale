@@ -1,22 +1,34 @@
-import { authenticated } from "@/controllers/auth.js";
+"use server";
 
-export async function createCardSet(_, formData) {
+import { authenticated } from "@/controllers/auth.js";
+import { redirect } from "next/navigation";
+
+import { getDbAsync } from "@/lib/prisma.js";
+
+export async function createCardSet(cardSet) {
+  const prisma = await getDbAsync();
+
   const username = await authenticated();
 
   if (!username) {
     return;
   }
 
-  const cardSet = formData.get("cardSet");
-
   try {
     let user = await prisma.user.findFirst({ where: { username } });
 
     await prisma.cardSet.create({
       data: {
-        cards: JSON.stringify(cardSet),
-        owner: username,
+        cards: cardSet,
+        owner: {
+          connect: { id: user.id },
+        },
       },
     });
-  } catch (err) {}
+  } catch (err) {
+    console.log(err);
+    return;
+  }
+
+  redirect("/menu");
 }

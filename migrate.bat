@@ -21,6 +21,8 @@ if (%CORRECT_DB%=="n") (set /p DB="Database name: ")
 set /p MIGRATION="Migration Name: "
 set /p LOCAL="l (local) or r (remote): "
 
+call npx prisma generate
+
 call npx wrangler d1 migrations create %DB% %MIGRATION%
 
 set FILECOUNT=0
