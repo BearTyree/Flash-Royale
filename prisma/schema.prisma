@@ -17,3 +17,8 @@ model User {
   passwordHash String
   passwordSalt String
 }
+
+model CardSet {
+  id    Int  @id @default(autoincrement())
+  cards Json
+}
