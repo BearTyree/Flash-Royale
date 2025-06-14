@@ -12,13 +12,16 @@ datasource db {
 }
 
 model User {
-  id           Int    @id @default(autoincrement())
-  username     String @unique
+  id           Int       @id @default(autoincrement())
+  username     String    @unique
   passwordHash String
   passwordSalt String
+  CardSet      CardSet[]
 }
 
 model CardSet {
-  id    Int  @id @default(autoincrement())
-  cards Json
+  id      Int  @id @default(autoincrement())
+  cards   Json
+  owner   User @relation(fields: [ownerId], references: [id])
+  ownerId Int
 }
