@@ -37,10 +37,11 @@ export default function Create() {
       newCard.value = changes.value;
     }
 
-    setCardSet(
-      (prevSet) =>
-        new Set(prevSet.name, [...prevSet.flashcards.splice(index, 1, newCard)])
-    );
+    setCardSet((prevSet) => {
+      let oldSet = prevSet;
+      oldSet.flashcards.splice(index, 1, newCard);
+      return new Set(prevSet.name, [...oldSet.flashcards]);
+    });
   }
 
   async function publishCards() {

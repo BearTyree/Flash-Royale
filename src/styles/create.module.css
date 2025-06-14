@@ -1,125 +1,127 @@
 #createContent {
-    box-sizing: border-box;
-    padding-bottom: 1rem;
-    height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr 8fr 1fr;
-    grid-template-rows: 2fr 8fr;
-    gap: 0.5rem;
+  margin-top: 60px;
+  box-sizing: border-box;
+  padding-bottom: 1rem;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 8fr 1fr;
+  grid-template-rows: 2fr 8fr;
+  gap: 0.5rem;
 }
 
 .flashcardCreationHeader {
-    grid-row: 1 / 2;
-    grid-column: 2 / 3;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 0.5rem;
+  grid-row: 1 / 2;
+  grid-column: 2 / 3;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .publishButton {
-    background-color: #005994;
-    padding: 0.5rem 1rem 0.5rem 1rem;
-    border-radius: 1rem;
-    cursor: pointer;
+  background-color: #005994;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  border-radius: 1rem;
+  cursor: pointer;
 }
 
 .publishButton:hover {
-    background-color: #0071bd;
+  background-color: #0071bd;
 }
 
 .flashcardCreationContainer {
-    grid-row: 2 / 3;
-    grid-column: 2 / 3;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-sizing: border-box;
-    border-radius: 1rem;
-    background-color: #3a3a3a;
-    height: 100%;
-    width: 100%;
-    padding: 2rem 6rem 1rem 6rem;
-    overflow: scroll;
-    gap: 1rem;
+  grid-row: 2 / 3;
+  grid-column: 2 / 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  border-radius: 1rem;
+  background-color: #3a3a3a;
+  height: 100%;
+  width: 100%;
+  padding: 2rem 6rem 1rem 6rem;
+  overflow: scroll;
+  gap: 1rem;
 }
 
 .flashcardCreationContainer form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .flashcardCreation {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 5fr 5fr 1fr;
-    gap: 2rem;
-    background-color: #484848;
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    align-items: center;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 5fr 5fr 1fr;
+  gap: 2rem;
+  background-color: #484848;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  align-items: center;
 }
 
 .flashcardInput {
-    display: flex;
-    height: 100%;
-    flex-direction: column;
-    justify-content: flex-end;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
-.flashcardInput textarea, .flashcardInput input {
-    width: 100%;
-    font-size: 1rem;
-    padding: 0.5rem;
-    box-sizing: border-box;
-    border-radius: 0;
-    background-color: transparent;
-    border-width: 0 0 3px 0;
-    border-color: #005994;
-    border-style: solid;
-    resize: none;
+.flashcardInput textarea,
+.flashcardInput input {
+  width: 100%;
+  font-size: 1rem;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  border-radius: 0;
+  background-color: transparent;
+  border-width: 0 0 3px 0;
+  border-color: #005994;
+  border-style: solid;
+  resize: none;
 }
 
 .flashcardInput textarea[name="term"] {
-    grid-column: 1 / 2;
+  grid-column: 1 / 2;
 }
 
 .flashcardInput textarea[name="definition"] {
-    grid-column: 2 / 3;
+  grid-column: 2 / 3;
 }
 
 .flashcardInput input {
-    grid-column: 3 / 4;
-    border-color: #005994;
+  grid-column: 3 / 4;
+  border-color: #005994;
 }
 
 /* Chrome, Safari, Edge, Opera */
-.flashcardInput input[type=number]::-webkit-inner-spin-button,
-.flashcardInput input[type=number]::-webkit-outer-spin-button {
+.flashcardInput input[type="number"]::-webkit-inner-spin-button,
+.flashcardInput input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-.flashcardInput textarea:focus, .flashcard-input input:focus {
-    outline: none;
+.flashcardInput textarea:focus,
+.flashcard-input input:focus {
+  outline: none;
 }
 
 .newFlashcard {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .newFlashcard:hover {
-    color: #9a9a9a
-
+  color: #9a9a9a;
 }
 
 .flashcardInput {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
