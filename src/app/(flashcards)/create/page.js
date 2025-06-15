@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Flashcard, Set } from "./logic";
 import styles from "@/styles/create.module.css";
 import { createCardSet } from "@/actions/cards.js";
