@@ -8,6 +8,7 @@ class Flashcard {
 class Set {
   constructor(name, flashcards) {
     (this.name = name), (this.flashcards = flashcards);
+    this.length = this.flashcards.length;
   }
 }
 

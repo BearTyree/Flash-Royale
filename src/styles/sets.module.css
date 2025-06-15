@@ -1,0 +1,87 @@
+#createContent {
+    box-sizing: border-box;
+    padding-bottom: 1rem;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 8fr 1fr;
+    grid-template-rows: 5fr 16fr;
+    gap: 0.5rem;
+}
+
+.setViewerHeader {
+    grid-row: 1 / 2;
+    grid-column: 2 / 3;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.setViewerHeader form {
+    width: 80%;
+}
+
+.setViewerContainer {
+    grid-row: 2 / 3;
+    grid-column: 2 / 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    background-color: transparent;
+    height: 100%;
+    width: 100%;
+    padding: 2rem 6rem 1rem 6rem;
+    overflow: scroll;
+    gap: 1rem;
+}
+
+.setSearch {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.5rem;
+    border-radius: 0;
+    background-color: transparent;
+    border-width: 0 0 3px 0;
+    border-color: #005994;
+    border-style: solid;
+}
+
+.setSearch:focus {
+    outline: none;
+}
+
+.setContainer {
+    background-color: #3a3a3a;
+    border-radius: 1rem;
+    padding: 1rem;
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.starButton {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    stroke: white;
+    fill: white;
+    cursor: pointer;
+}
+
+.useSetButton {
+    background-color: #005994;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    border-radius: 1rem;
+    cursor: pointer;
+}
+
+.useSetButton:hover {
+    background-color: #0071bd;
+}

@@ -4,7 +4,7 @@
     height: 100vh;
     display: grid;
     grid-template-columns: 1fr 8fr 1fr;
-    grid-template-rows: 2fr 8fr;
+    grid-template-rows: 5fr 16fr;
     gap: 0.5rem;
 }
 
