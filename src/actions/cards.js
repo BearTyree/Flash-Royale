@@ -30,5 +30,5 @@ export async function createCardSet(cardSet) {
     return;
   }
 
-  redirect("/menu");
+  redirect("/sets");
 }
