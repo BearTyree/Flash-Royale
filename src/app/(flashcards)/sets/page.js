@@ -1,9 +1,8 @@
 import styles from "@/styles/sets.module.css";
-import Image from "next/image";
 
 import { getDbAsync } from "@/lib/prisma.js";
 import { authenticated } from "@/controllers/auth.js";
-import Link from "next/link";
+import SetsList from "./SetsList";
 
 export default async function Sets() {
   const prisma = await getDbAsync();
@@ -32,26 +31,7 @@ export default async function Sets() {
       </div>
 
       <div className={styles.setViewerContainer}>
-        {cardSets.map((set) => (
-          <div key={set.id} className={styles.setContainer}>
-            <h2>{JSON.parse(set.cards).name}</h2>
-            <h3>{JSON.parse(set.cards).length} terms</h3>
-            <Image
-              src="/star.svg"
-              alt="star"
-              width={24}
-              height={24}
-              // onClick={starSet}
-              className={styles.starButton}
-            ></Image>
-            <div className={styles.options}>
-              <Link href={`/sets/${set.id}`} className={styles.setButton}>
-                Edit Set
-              </Link>
-              <div className={styles.setButton}>Use Set</div>
-            </div>
-          </div>
-        ))}
+        <SetsList cardSets={cardSets} />
       </div>
     </div>
   );

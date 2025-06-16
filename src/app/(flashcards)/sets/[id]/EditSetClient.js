@@ -3,10 +3,9 @@
 import { useState } from "react";
 import { Flashcard, Set } from "./logic";
 import styles from "@/styles/edit.module.css";
-import { createCardSet } from "@/actions/cards.js";
+import { createCardSet, updateCardSet } from "@/actions/cards.js";
 
-export default function EditSetClient({ initialSet }) {
-  console.log(initialSet);
+export default function EditSetClient({ initialSet, id }) {
   const [cardSet, setCardSet] = useState(initialSet);
 
   function addCard() {
@@ -49,6 +48,15 @@ export default function EditSetClient({ initialSet }) {
 
   return (
     <>
+      <div className={styles.flashcardCreationHeader}>
+        <h1>Edit {cardSet.name}</h1>
+        <div
+          onClick={() => updateCardSet(id, JSON.stringify(cardSet))}
+          className={styles.updateButton}
+        >
+          Update
+        </div>
+      </div>
       <div className={styles.flashcardCreationContainer}>
         <form action="">
           <div className={styles.flashcardInput}>

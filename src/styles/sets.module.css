@@ -99,8 +99,23 @@
   border-radius: 1rem;
   cursor: pointer;
   text-decoration: none;
+  font-size: medium;
 }
 
-.useSetButton:hover {
+.setButton:hover {
   background-color: #0071bd;
+}
+
+.deleteButton {
+  background-color: #ff0000;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  border-radius: 1rem;
+  cursor: pointer;
+  border: none;
+  font-size: medium;
+  text-decoration: none;
+}
+
+.deleteButton:hover {
+  background-color: #ff4545;
 }

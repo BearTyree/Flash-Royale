@@ -30,16 +30,13 @@ export default async function Edit({ params }) {
     cardSet = null;
   }
 
-  console.log(cardSet);
-
   return (
     <>
       <div className={styles.setContainer}>
         <div className={styles.flashcardCreationHeader}>
           <h1>Edit {cardSet.name}</h1>
-          <div className={styles.publishButton}>Update</div>
         </div>
-        <EditSetClient initialSet={cardSet} />
+        <EditSetClient id={id} initialSet={cardSet} />
       </div>
     </>
   );
