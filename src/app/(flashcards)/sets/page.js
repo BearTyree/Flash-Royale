@@ -3,6 +3,7 @@ import styles from "@/styles/sets.module.css";
 import { getDbAsync } from "@/lib/prisma.js";
 import { authenticated } from "@/controllers/auth.js";
 import SetsList from "./SetsList";
+import Link from "next/link";
 
 export default async function Sets() {
   const prisma = await getDbAsync();
@@ -28,6 +29,9 @@ export default async function Sets() {
             className={styles.setSearch}
           />
         </form>
+        <Link href="/create" className={styles.setButton}>
+          Create New Set
+        </Link>
       </div>
 
       <div className={styles.setViewerContainer}>

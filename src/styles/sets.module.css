@@ -28,7 +28,7 @@
   height: max(100vh, max-content);
   display: grid;
   grid-template-columns: 1fr 5fr 1fr;
-  grid-template-rows: 8rem 1fr;
+  grid-template-rows: 12rem 1fr;
   gap: 0.5rem;
 }
 
