@@ -16,3 +16,13 @@ export async function getDbAsync() {
   const adapter = new PrismaD1(env.DB);
   return new PrismaClient({ adapter });
 }
+
+// export async function getDbAsync() {
+//   const { env } = await getCloudflareContext({ async: true });
+//   const db = env.DB;
+//   let functions = {};
+
+//   functions.findFirst = (finder) => {
+//     const conditions = Object.keys(finder.where);
+//   };
+// }
