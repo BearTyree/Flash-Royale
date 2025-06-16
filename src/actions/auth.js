@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { getDbAsync } from "@/lib/prisma.js";
 import hash from "@/lib/hash.js";
 import generateToken from "@/lib/generateToken";
+import { authenticated } from "@/controllers/auth.js";
 
 export async function authenticate(previousState, formData) {
   const cookieStore = await cookies();
@@ -89,4 +90,17 @@ export async function createUser(previousState, formData) {
     return;
   }
   redirect("/menu");
+}
+
+export async function checkToken() {
+  const cookieStore = await cookies();
+
+  const username = await authenticated();
+
+  if (!username) {
+    cookieStore.delete("token");
+    return;
+  }
+
+  cookieStore.set("token", await generateToken(username));
 }

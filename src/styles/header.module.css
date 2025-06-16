@@ -30,6 +30,7 @@
   cursor: pointer;
   background-color: transparent;
   border: none;
+  font-size: large;
 }
 
 .headerLink:hover {

@@ -11,9 +11,9 @@ export default async function Header() {
           <h2>Flash Royale</h2>
         </Link>
         <div className={styles.headerLinks}>
-          {/* <Link href="/create" className={styles.headerLink}>
-            Create
-          </Link> */}
+          <Link href="/sets" className={styles.headerLink}>
+            Sets
+          </Link>
           <Link href="/menu" className={styles.headerLink}>
             Menu
           </Link>

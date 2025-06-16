@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import Header from "@/components/Header.js";
 
 export default function NotFound() {
   return (

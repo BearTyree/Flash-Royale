@@ -3,12 +3,9 @@ import Image from "next/image";
 
 import { getDbAsync } from "@/lib/prisma.js";
 import { authenticated } from "@/controllers/auth.js";
+import Link from "next/link";
 
 export default async function Sets() {
-  function starSet() {}
-
-  function useSet() {}
-
   const prisma = await getDbAsync();
   const username = await authenticated();
 
@@ -22,7 +19,7 @@ export default async function Sets() {
   });
 
   return (
-    <>
+    <div className={styles.setsContainer}>
       <div className={styles.setViewerHeader}>
         <h1>View Your Sets</h1>
         <form action="">
@@ -33,11 +30,12 @@ export default async function Sets() {
           />
         </form>
       </div>
-      {cardSets.map((set) => (
-        <div key={set} className={styles.setViewerContainer}>
-          <div className={styles.setContainer}>
+
+      <div className={styles.setViewerContainer}>
+        {cardSets.map((set) => (
+          <div key={set.id} className={styles.setContainer}>
             <h2>{JSON.parse(set.cards).name}</h2>
-            <h3>36 terms</h3>
+            <h3>{JSON.parse(set.cards).length} terms</h3>
             <Image
               src="/star.svg"
               alt="star"
@@ -46,10 +44,15 @@ export default async function Sets() {
               // onClick={starSet}
               className={styles.starButton}
             ></Image>
-            <div className={styles.useSetButton}>Use Set</div>
+            <div className={styles.options}>
+              <Link href={`/sets/${set.id}`} className={styles.setButton}>
+                Edit Set
+              </Link>
+              <div className={styles.setButton}>Use Set</div>
+            </div>
           </div>
-        </div>
-      ))}
-    </>
+        ))}
+      </div>
+    </div>
   );
 }

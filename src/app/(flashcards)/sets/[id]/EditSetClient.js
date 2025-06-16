@@ -2,13 +2,12 @@
 
 import { useState } from "react";
 import { Flashcard, Set } from "./logic";
-import styles from "@/styles/create.module.css";
+import styles from "@/styles/edit.module.css";
 import { createCardSet } from "@/actions/cards.js";
 
-export default function Create() {
-  const [cardSet, setCardSet] = useState(
-    new Set("", [new Flashcard("", "", 0)])
-  );
+export default function EditSetClient({ initialSet }) {
+  console.log(initialSet);
+  const [cardSet, setCardSet] = useState(initialSet);
 
   function addCard() {
     setCardSet((prevSet) => {
@@ -49,17 +48,12 @@ export default function Create() {
   }
 
   return (
-    <div className={styles.setContainer}>
-      <div className={styles.flashcardCreationHeader}>
-        <h1>Create a Set</h1>
-        <div onClick={publishCards} className={styles.publishButton}>
-          Publish
-        </div>
-      </div>
+    <>
       <div className={styles.flashcardCreationContainer}>
         <form action="">
           <div className={styles.flashcardInput}>
             <input
+              value={cardSet.name}
               onChange={(e) => setCardSetName(e.target.value)}
               type="text"
               name="set-name"
@@ -67,13 +61,14 @@ export default function Create() {
             />
             <label htmlFor="set-name">Set Name</label>
           </div>
-          {cardSet.flashcards?.map((card) => (
+          {cardSet.flashcards?.map((card, index) => (
             <div key={card.id} className={styles.flashcardCreation}>
               <div className={styles.flashcardInput}>
                 <textarea
                   onChange={(e) =>
                     updateCard(card.id, { term: e.target.value })
                   }
+                  value={cardSet.flashcards[index].term}
                   name="term"
                   id="term"
                 ></textarea>
@@ -84,6 +79,7 @@ export default function Create() {
                   onChange={(e) =>
                     updateCard(card.id, { definition: e.target.value })
                   }
+                  value={cardSet.flashcards[index].definition}
                   name="definition"
                   id="definition"
                 ></textarea>
@@ -94,6 +90,7 @@ export default function Create() {
                   onChange={(e) =>
                     updateCard(card.id, { value: e.target.value })
                   }
+                  value={cardSet.flashcards[index].value}
                   type="number"
                   id="value"
                   name="value"
@@ -109,6 +106,6 @@ export default function Create() {
           + New Flashcard
         </div>
       </div>
-    </div>
+    </>
   );
 }
