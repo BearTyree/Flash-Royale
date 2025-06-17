@@ -1,5 +1,0 @@
--- CreateTable
-CREATE TABLE "CardSet" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "cards" JSONB NOT NULL
-);
