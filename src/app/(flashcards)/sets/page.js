@@ -1,21 +1,26 @@
 import styles from "@/styles/sets.module.css";
 
-import { getDbAsync } from "@/lib/prisma.js";
 import { authenticated } from "@/controllers/auth.js";
 import SetsList from "./SetsList";
 import Link from "next/link";
 
+import { getDbAsync } from "@/lib/drizzle";
+import { eq } from "drizzle-orm";
+
 export default async function Sets() {
-  const prisma = await getDbAsync();
+  const db = await getDbAsync();
   const username = await authenticated();
 
   if (!username) {
     return <div>Error</div>;
   }
 
-  const user = await prisma.user.findFirst({ where: { username } });
-  const cardSets = await prisma.cardSet.findMany({
-    where: { ownerId: user.id },
+  const user = await db.query.usersTable.findFirst({
+    where: (users, { eq }) => eq(users.username, username),
+  });
+
+  const cardSets = await db.query.cardSetsTable.findMany({
+    where: (cardSets, { eq }) => eq(cardSets.ownerId, user.id),
   });
 
   return (

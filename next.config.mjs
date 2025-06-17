@@ -5,13 +5,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  serverExternalPackages: [
-    "@prisma/client",
-    "@prisma/adapter-d1",
-    ".prisma/client",
-  ],
-};
+const nextConfig = {};
 
 export default nextConfig;
 

@@ -4,10 +4,12 @@ import { authenticated } from "@/controllers/auth.js";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
-import { getDbAsync } from "@/lib/prisma.js";
+import { getDbAsync } from "@/lib/drizzle";
+import { eq } from "drizzle-orm";
+import { cardSetsTable, usersTable } from "@/lib/schema";
 
 export async function createCardSet(cardSet) {
-  const prisma = await getDbAsync();
+  const db = await getDbAsync();
 
   const username = await authenticated();
 
@@ -16,15 +18,13 @@ export async function createCardSet(cardSet) {
   }
 
   try {
-    let user = await prisma.user.findFirst({ where: { username } });
+    const user = await db.query.usersTable.findFirst({
+      where: (users, { eq }) => eq(users.username, username),
+    });
 
-    await prisma.cardSet.create({
-      data: {
-        cards: cardSet,
-        owner: {
-          connect: { id: user.id },
-        },
-      },
+    await db.insert(cardSetsTable).values({
+      cards: cardSet,
+      ownerId: user.id,
     });
   } catch (err) {
     console.log(err);
@@ -35,7 +35,7 @@ export async function createCardSet(cardSet) {
 }
 
 export async function updateCardSet(id, updatedCardSet) {
-  const prisma = await getDbAsync();
+  const db = await getDbAsync();
 
   const username = await authenticated();
 
@@ -45,21 +45,26 @@ export async function updateCardSet(id, updatedCardSet) {
 
   id = parseInt(id);
 
-  const user = await prisma.user.findFirst({ where: { username } });
+  const user = await db.query.usersTable.findFirst({
+    where: (users, { eq }) => eq(users.username, username),
+  });
 
-  let cardSet = await prisma.cardSet.findFirst({ where: { id } });
+  let cardSet = await db.query.cardSetsTable.findFirst({
+    where: (cardSets, { eq }) => eq(cardSets.id, id),
+  });
 
   if (cardSet.ownerId != user.id) {
     return;
   }
 
   try {
-    let update = await prisma.cardSet.update({
-      where: { id },
-      data: { cards: updatedCardSet },
-    });
+    const update = await db
+      .update(cardSetsTable)
+      .set({ cards: updatedCardSet })
+      .where(eq(cardSetsTable.id, id))
+      .returning();
 
-    if (!update) {
+    if (!update || update.length === 0) {
       return;
     }
   } catch (err) {
@@ -71,7 +76,7 @@ export async function updateCardSet(id, updatedCardSet) {
 }
 
 export async function deleteSet(id) {
-  const prisma = await getDbAsync();
+  const db = await getDbAsync();
 
   const username = await authenticated();
 
@@ -81,15 +86,22 @@ export async function deleteSet(id) {
 
   id = parseInt(id);
   try {
-    const user = await prisma.user.findFirst({ where: { username } });
+    const user = await db.query.usersTable.findFirst({
+      where: (users, { eq }) => eq(users.username, username),
+    });
 
-    let cardSet = await prisma.cardSet.findFirst({ where: { id } });
+    const cardSet = await db.query.cardSetsTable.findFirst({
+      where: (cardSets, { eq }) => eq(cardSets.id, id),
+    });
 
     if (cardSet.ownerId != user.id) {
       return;
     }
 
-    let deleted = await prisma.cardSet.delete({ where: { id } });
+    let deleted = await db
+      .delete(cardSetsTable)
+      .where(eq(cardSetsTable.id, id))
+      .returning();
 
     if (!deleted) {
       return;

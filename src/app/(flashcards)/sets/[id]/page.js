@@ -1,11 +1,13 @@
 import { authenticated } from "@/controllers/auth";
-import { getDbAsync } from "@/lib/prisma";
 import styles from "@/styles/edit.module.css";
 import EditSetClient from "./EditSetClient";
 import { notFound } from "next/navigation";
 
+import { getDbAsync } from "@/lib/drizzle";
+import { eq } from "drizzle-orm";
+
 export default async function Edit({ params }) {
-  const prisma = await getDbAsync();
+  const db = await getDbAsync();
 
   let { id } = await params;
 
@@ -20,9 +22,13 @@ export default async function Edit({ params }) {
 
   const username = await authenticated();
 
-  const user = await prisma.user.findFirst({ where: { username } });
+  const user = await db.query.usersTable.findFirst({
+    where: (users, { eq }) => eq(users.username, username),
+  });
 
-  let cardSet = await prisma.cardSet.findFirst({ where: { id } });
+  let cardSet = await db.query.cardSetsTable.findFirst({
+    where: (cardSets, { eq }) => eq(cardSets.id, id),
+  });
 
   if (cardSet.ownerId == user.id) {
     cardSet = JSON.parse(cardSet.cards);
@@ -33,9 +39,6 @@ export default async function Edit({ params }) {
   return (
     <>
       <div className={styles.setContainer}>
-        <div className={styles.flashcardCreationHeader}>
-          <h1>Edit {cardSet.name}</h1>
-        </div>
         <EditSetClient id={id} initialSet={cardSet} />
       </div>
     </>

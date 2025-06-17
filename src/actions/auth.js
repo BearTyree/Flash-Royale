@@ -3,21 +3,23 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { getDbAsync } from "@/lib/prisma.js";
+import { getDbAsync } from "@/lib/drizzle.js";
 import hash from "@/lib/hash.js";
 import generateToken from "@/lib/generateToken";
 import { authenticated } from "@/controllers/auth.js";
+import { usersTable } from "@/lib/schema";
+import { eq } from "drizzle-orm";
 
 export async function authenticate(previousState, formData) {
   const cookieStore = await cookies();
 
-  const prisma = await getDbAsync();
+  const db = await getDbAsync();
 
   const username = formData.get("username");
   const password = formData.get("password");
 
-  const user = await prisma.user.findFirst({
-    where: { username },
+  const user = await db.query.usersTable.findFirst({
+    where: (users, { eq }) => eq(users.username, username),
   });
 
   if (!user) {
@@ -55,7 +57,7 @@ export async function logout() {
 export async function createUser(previousState, formData) {
   const cookieStore = await cookies();
 
-  const prisma = await getDbAsync();
+  const db = await getDbAsync();
 
   const username = formData.get("username");
   const password = formData.get("password");
@@ -69,12 +71,10 @@ export async function createUser(previousState, formData) {
   const passwordHash = await hash(password + salt);
 
   try {
-    await prisma.user.create({
-      data: {
-        username,
-        passwordHash,
-        passwordSalt: salt,
-      },
+    await db.insert(usersTable).values({
+      username,
+      passwordHash,
+      passwordSalt: salt,
     });
 
     cookieStore.set({
