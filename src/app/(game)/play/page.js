@@ -1,5 +1,91 @@
+"use client";
+
 import styles from "@/styles/play.module.css";
 import Image from "next/image";
+import EnergyMeter from "@/components/EnergyMeter";
+import { Flashcard, Set } from "./logic";
+
+let questionOne = new Flashcard("What's the color of the sky", "Blue", 1);
+let questionTwo = new Flashcard("What's Bear Tyree's real name", "Trinnean", 9);
+let questionThree = new Flashcard("Bleh", "bleh", 3);
+let questionFour = new Flashcard("Worst cave student", "alpin", 5);
+let questionFive = new Flashcard("caleb", "wang", 4);
+
+const questionArray = [
+  questionOne,
+  questionTwo,
+  questionThree,
+  questionFour,
+  questionFive,
+];
+
+// function displayRandomQuestion() {
+//   let questionIndex = Math.floor(Math.random() * questionArray.length);
+//   const questionText = document.querySelector(".question");
+//   const pointText = document.querySelector(".question-value");
+//   questionText.textContent = questionArray[questionIndex].term;
+//   pointText.textContent = questionArray[questionIndex].value;
+//   currentQuestion = questionArray[questionIndex];
+// }
+
+// function checkAnswer(question, user_answer) {
+//   return question.definition == user_answer;
+// }
+
+// // const inputForm = document.querySelector("form");
+// // const answerInput = document.querySelector(".input-container input");
+
+// // const wrongAnswerText = document.querySelector(".wrongAnswer");
+
+// function addPoints(value) {
+//   console.log(value);
+//   currentPoints += value;
+//   if (currentPoints > 9) {
+//     currentPoints = 9;
+//   }
+//   console.log(currentPoints);
+// }
+
+// function substractPoints(value) {
+//   if (!((currentPoints -= value) < 0)) {
+//     currentPoints -= value;
+//   }
+// }
+
+// function renderPoints() {
+//   for (const energy of energyMeter) {
+//     if (!energy.classList.contains("invisible")) {
+//       energy.classList.add("invisible");
+//     }
+//   }
+//   for (let i = 0; i < currentPoints; i++) {
+//     energyMeter[i].classList.remove("invisible");
+//   }
+// }
+
+// function renderHealth() {
+//   const healthText = document.querySelector(".health-text");
+//   healthText.textContent = `${currentHealth}%`;
+//   const health = document.querySelector(".health");
+//   health.style.width = `${currentHealth}%`;
+// }
+
+// function incorrectAnswer() {}
+
+// inputForm.addEventListener("submit", (event) => {
+//   event.preventDefault();
+//   if (checkAnswer(currentQuestion, answerInput.value)) {
+//     addPoints(currentQuestion.value);
+//     renderPoints();
+//     inputForm.reset();
+//     if (!wrongAnswerText.classList.contains("invisible"))
+//       wrongAnswerText.classList.add("invisible");
+//     displayRandomQuestion();
+//   } else {
+//     inputForm.reset();
+//     wrongAnswerText.classList.remove("invisible");
+//   }
+// });
 
 export default function Play() {
   return (
@@ -35,23 +121,19 @@ export default function Play() {
             <div className={styles.inputContainer}>
               <input type="text" id="answer" placeholder="answer" />
               <button type="submit">
-                <Image src={"/arrow-right-circle.svg"} alt={'Submit Button'} fill={true} className={styles.submitButton}>
-                </Image>
+                <Image
+                  src={"/arrow-right-circle.svg"}
+                  alt={"Submit Button"}
+                  fill={true}
+                  className={styles.submitButton}
+                ></Image>
               </button>
             </div>
           </form>
-          <p className={`${styles.wrongAnswer} ${styles.invisible}`}>Incorrect!</p>
-          <div className={`${styles.energyMeter}`}>
-            <div className={`${styles.energyUnit} ${styles.invisible}`}></div>
-            <div className={`${styles.energyUnit2} ${styles.invisible}`}></div>
-            <div className={`${styles.energyUnit3} ${styles.invisible}`}></div>
-            <div className={`${styles.energyUnit4} ${styles.invisible}`}></div>
-            <div className={`${styles.energyUnit5} ${styles.invisible}`}></div>
-            <div className={`${styles.energyUnit6} ${styles.invisible}`}></div>
-            <div className={`${styles.energyUnit7} ${styles.invisible}`}></div>
-            <div className={`${styles.energyUnit8} ${styles.invisible}`}></div>
-            <div className={`${styles.energyUnit9} ${styles.invisible}`}></div>
-          </div>
+          <p className={`${styles.wrongAnswer} ${styles.invisible}`}>
+            Incorrect!
+          </p>
+          <EnergyMeter energy={0}/>
         </div>
         <div className={styles.flashcardDeck}>
           <div className={styles.cardStack}>

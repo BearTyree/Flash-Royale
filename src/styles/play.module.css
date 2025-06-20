@@ -134,35 +134,35 @@
     background-color: yellow;
     grid-column: 1 / 2;
 }
-.energyUnit-2 {
+.energyUnit2 {
     background-color: yellow;
     grid-column: 2 / 3;
 }
-.energyUnit-3 {
+.energyUnit3 {
     background-color: yellow;
     grid-column: 3 / 4;
 }
-.energyUnit-4 {
+.energyUnit4 {
     background-color: yellow;
     grid-column: 4 / 5;
 }
-.energyUnit-5 {
+.energyUnit5 {
     background-color: yellow;
     grid-column: 5 / 6;
 }
-.energyUnit-6 {
+.energyUnit6 {
     background-color: yellow;
     grid-column: 6 / 7;
 }
-.energyUnit-7 {
+.energyUnit7 {
     background-color: yellow;
     grid-column: 7 / 8;
 }
-.energyUnit-8 {
+.energyUnit8 {
     background-color: yellow;
     grid-column: 8 / 9;
 }
-.energyUnit-9 {
+.energyUnit9 {
     background-color: yellow;
     grid-column: 9 / 10;
     border-top-right-radius: 1rem;
