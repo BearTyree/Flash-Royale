@@ -1,0 +1,362 @@
+.gameContent {
+    box-sizing: border-box;
+    padding: 1rem;
+    height: 100vh;
+    display: grid;
+    background-color: #1F1F1F;
+    grid-template-columns: 1fr 1fr 6fr 2fr;
+    grid-template-rows: 1fr 5fr 3fr 1fr;
+    gap: 0.5rem;
+}
+
+.loginContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.loginContainer form{
+    display: flex;
+}
+
+.flashcard {
+    position:relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    background-color: #363535;
+    height: 12rem;
+    width: 24rem;
+    border-radius: 1rem;
+    border:solid #676767 1px;
+}
+
+.flashcard .question {
+    text-align: center;
+    font-size: 2rem;
+    font-family: "Lato", sans-serif;
+}
+
+.questionValue {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.75rem;
+    color: yellow;
+}
+
+.playerContainer form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.playerContainer form label {
+    color: white;
+    font-family: "Lato", sans-serif;
+}
+
+.playerContainer form input {
+    box-sizing: border-box;
+    width: 12rem;
+    color: white;
+    background-color: #595959;
+    border-radius: 2rem;
+    padding: 0.5rem;
+}
+
+.playerContainer form input:focus {
+    outline: none;
+}
+
+.inputContainer {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.submitButton {
+    cursor: pointer;
+}
+
+.submitButton:hover {
+    filter: brightness(75%);
+}
+
+.inputContainer button {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    height: 2rem;
+    width: 2rem;
+}
+
+.playerContainer {
+    height: 100%;
+    width: 100%;
+    grid-row: 3 / 5;
+    grid-column: 3 / 4;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.wrongAnswer {
+    margin-top: -0.5rem;
+    color: red;
+    font-family: "Lato", sans-serif;
+    font-weight: 400;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+.energyMeter {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    height: 2rem;
+    width: 75%;
+    background-color: rgb(115, 115, 0);
+    border: none;
+    border-radius: 1rem;
+    gap: 0.25rem;
+}
+
+.energyUnit1 {
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+    background-color: yellow;
+    grid-column: 1 / 2;
+}
+.energyUnit-2 {
+    background-color: yellow;
+    grid-column: 2 / 3;
+}
+.energyUnit-3 {
+    background-color: yellow;
+    grid-column: 3 / 4;
+}
+.energyUnit-4 {
+    background-color: yellow;
+    grid-column: 4 / 5;
+}
+.energyUnit-5 {
+    background-color: yellow;
+    grid-column: 5 / 6;
+}
+.energyUnit-6 {
+    background-color: yellow;
+    grid-column: 6 / 7;
+}
+.energyUnit-7 {
+    background-color: yellow;
+    grid-column: 7 / 8;
+}
+.energyUnit-8 {
+    background-color: yellow;
+    grid-column: 8 / 9;
+}
+.energyUnit-9 {
+    background-color: yellow;
+    grid-column: 9 / 10;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+
+.healthContainerOpponent {
+    height: 100%;
+    grid-column: 4 / 5;
+    grid-row: 1 / 2;
+    display: flex;
+    align-items: flex-end;
+}
+
+.healthContainerUser {
+    height: 100%;
+    grid-column: 4 / 5;
+    grid-row: 3 / 4;
+    display: flex;
+    align-items: flex-end;
+}
+
+.healthInfo {
+    width: 100%;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.healthBar {
+    height: 2rem;
+    width: 100%;
+    border-radius: 1rem;
+    background-color: rgb(0, 63, 0);
+}
+
+.health {
+    height: 2rem;
+    width: 100%;
+    background-color: green;
+    border-radius: 1rem;
+}
+
+/* Player Profiles */
+
+.opponentProfile, .userProfile {
+    color: white;
+    display: flex;
+    align-items: center;
+    background-color: #595959;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    gap: 0.5rem;
+}
+
+.opponentProfilePic, .userProfilePic {
+    height: 2rem;
+    width: 2rem;
+    border-radius: 1rem;
+}
+
+.opponentProfile {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+}
+
+.userProfile {
+    grid-column: 1 / 2;
+    grid-row: 4 / 5;
+}
+
+/* Actions */
+
+.actionContainer {
+    grid-row: 4 / 5;
+    grid-column: 4 / 5;
+    background-color: #595959;
+    display: flex;
+    border-radius: 0.5rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.attack, .defend, .special {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+    padding: 0.5rem;
+    color: white;
+    cursor: pointer;
+}
+
+.attack {
+    background-color: rgb(209, 49, 49);
+    border-bottom-left-radius: 0.5rem;
+    border-top-left-radius: 0.5rem;
+}
+
+.defend {
+    background-color: rgb(49, 54, 209);
+}
+
+.special {
+    background-color: rgb(209, 209, 49);
+    color: black;
+    border-bottom-right-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+
+.attack:hover {
+    background-color: rgb(163, 39, 39);
+}
+
+.defend:hover {
+    background-color: rgb(37, 66, 152);
+}
+
+.special:hover {
+    background-color: rgb(163, 157, 39);
+}
+
+
+/* Flashcard Deck */
+
+.flashcardDeck {
+    grid-row: 2 / 3;
+    grid-column: 3 / 4;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.flashcardDeck p {
+    margin-top: -2rem;
+}
+
+.cardStack {
+    position: relative;
+    width: 20rem;
+    height: 12rem;
+    margin: 50px auto;
+  }
+  
+.card {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    background-color: #363535;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: bold;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+  
+.cardBottom {
+    top: 10px;
+    left: 10px;
+    z-index: 0;
+    background-color: #2e2e2e;
+}
+  
+.cardTop {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background-color: #474747;
+}
+
+.cardTop h2 {
+    font-style: italic;
+}
+  
+
+.flashcardTop {
+    border-radius: 1rem;
+    background-color: #484848;
+    height: 10rem;
+    width: 16rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
