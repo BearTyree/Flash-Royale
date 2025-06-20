@@ -1,4 +1,4 @@
-import styles from "@/styles/play.module.css";
+import styles from "@/styles/energy-meter.module.css";
 
 export default function EnergyMeter({ energy }) {
   return (

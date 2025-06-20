@@ -1,0 +1,26 @@
+.flashcard {
+    position:relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    background-color: #363535;
+    height: 12rem;
+    width: 24rem;
+    border-radius: 1rem;
+    border:solid #676767 1px;
+}
+
+.flashcard .question {
+    text-align: center;
+    font-size: 2rem;
+    font-family: "Lato", sans-serif;
+}
+
+.questionValue {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.75rem;
+    color: yellow;
+}

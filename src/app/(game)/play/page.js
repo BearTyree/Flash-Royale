@@ -4,6 +4,7 @@ import styles from "@/styles/play.module.css";
 import Image from "next/image";
 import EnergyMeter from "@/components/EnergyMeter";
 import { Flashcard, Set } from "./logic";
+import UserFlashcard from "@/components/UserFlashcard";
 
 let questionOne = new Flashcard("What's the color of the sky", "Blue", 1);
 let questionTwo = new Flashcard("What's Bear Tyree's real name", "Trinnean", 9);
@@ -113,10 +114,7 @@ export default function Play() {
         </div>
 
         <div className={styles.playerContainer}>
-          <div className={styles.flashcard}>
-            <p className={styles.questionValue}></p>
-            <p className={styles.question}></p>
-          </div>
+          <UserFlashcard flashcard={questionOne}/>
           <form action="#">
             <div className={styles.inputContainer}>
               <input type="text" id="answer" placeholder="answer" />
