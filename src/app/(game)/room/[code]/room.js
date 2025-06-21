@@ -55,6 +55,7 @@ export default function RoomClient({ token, cardSets }) {
               <button>Use Set</button>
             </div>
           ))}
+          <button>Start</button>
         </div>
       )}
     </>
