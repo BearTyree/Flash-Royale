@@ -5,7 +5,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "flash-royale",
-  "main": ".open-next/worker.js",
+  "main": "./entry.js",
   "compatibility_date": "2025-03-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": {
@@ -21,6 +21,24 @@
       "database_name": "flash-royale-db",
       "database_id": "68ccf195-5e42-40bf-a166-7a9b62387899",
       "migrations_dir": "drizzle"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "REGISTRY",
+        "class_name": "Registry"
+      },
+      {
+        "name": "ROOMS",
+        "class_name": "Room"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_classes": ["Registry", "Room"]
     }
   ]
   /**
