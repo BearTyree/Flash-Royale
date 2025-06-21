@@ -1,5 +1,7 @@
 import { cookies } from "next/headers";
 import RoomClient from "./room";
+import { getDbAsync } from "@/lib/drizzle";
+import { authenticated } from "@/controllers/auth";
 
 export default async function Room() {
   const cookieStore = await cookies();

@@ -1,12 +1,18 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+
+import Play from "@/components/play/play";
 
 export default function RoomClient({ token, cardSets }) {
   const [owner, setOwner] = useState(null);
   const [name, setName] = useState(null);
   const [ownRoom, setOwnRoom] = useState(false);
+  const [started, setStarted] = useState(false);
+  const [cards, setCards] = useState(
+    cardSets[0] ? JSON.parse(cardSets[0].cards) : null
+  );
 
   const params = useParams();
   const code = params.code;
@@ -38,26 +44,52 @@ export default function RoomClient({ token, cardSets }) {
           setOwnRoom(true);
           break;
         }
+        case "start": {
+          const { cards: cardsData } = JSON.parse(message.data);
+          setCards(cardsData);
+          setStarted(true);
+        }
       }
     });
   }, [code, token]);
 
+  if (!started) {
+    return (
+      <>
+        {name}
+        <br />
+        {ownRoom && (
+          <div>
+            {cardSets.map((set) => (
+              <div key={set.id}>
+                {JSON.parse(set.cards).name}
+                <br />
+                <button
+                  onClick={() => {
+                    setCards(JSON.parse(set.cards));
+                  }}
+                >
+                  Use Set
+                </button>
+              </div>
+            ))}
+            <button
+              onClick={() =>
+                wsRef.current.send(
+                  JSON.stringify({ event: "start", cards: cards })
+                )
+              }
+            >
+              Start
+            </button>
+          </div>
+        )}
+      </>
+    );
+  }
   return (
     <>
-      {name}
-      <br />
-      {ownRoom && (
-        <div>
-          {cardSets.map((set) => (
-            <div key={set.id}>
-              {JSON.parse(set.cards).name}
-              <br />
-              <button>Use Set</button>
-            </div>
-          ))}
-          <button>Start</button>
-        </div>
-      )}
+      <Play flashcards={cards.flashcards} />
     </>
   );
 }

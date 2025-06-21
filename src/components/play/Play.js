@@ -2,23 +2,24 @@
 
 import styles from "@/styles/play.module.css";
 import Image from "next/image";
-import EnergyMeter from "@/components/EnergyMeter";
+import EnergyMeter from "@/components/play/EnergyMeter";
 import { Flashcard, Set } from "./logic";
-import UserFlashcard from "@/components/UserFlashcard";
+import UserFlashcard from "@/components/play/UserFlashcard";
+import { useState } from "react";
 
-let questionOne = new Flashcard("What's the color of the sky", "Blue", 1);
-let questionTwo = new Flashcard("What's Bear Tyree's real name", "Trinnean", 9);
-let questionThree = new Flashcard("Bleh", "bleh", 3);
-let questionFour = new Flashcard("Worst cave student", "alpin", 5);
-let questionFive = new Flashcard("caleb", "wang", 4);
+// let questionOne = new Flashcard("What's the color of the sky", "Blue", 1);
+// let questionTwo = new Flashcard("What's Bear Tyree's real name", "Trinnean", 9);
+// let questionThree = new Flashcard("Bleh", "bleh", 3);
+// let questionFour = new Flashcard("Worst cave student", "alpin", 5);
+// let questionFive = new Flashcard("caleb", "wang", 4);
 
-const questionArray = [
-  questionOne,
-  questionTwo,
-  questionThree,
-  questionFour,
-  questionFive,
-];
+// const questionArray = [
+//   questionOne,
+//   questionTwo,
+//   questionThree,
+//   questionFour,
+//   questionFive,
+// ];
 
 // function displayRandomQuestion() {
 //   let questionIndex = Math.floor(Math.random() * questionArray.length);
@@ -88,7 +89,9 @@ const questionArray = [
 //   }
 // });
 
-export default function Play() {
+export default function Play({ flashcards }) {
+  const [currentCard, setCurrentCard] = useState(flashcards[0]);
+
   return (
     <>
       <div className={styles.gameContent}>
@@ -114,7 +117,7 @@ export default function Play() {
         </div>
 
         <div className={styles.playerContainer}>
-          <UserFlashcard flashcard={questionOne}/>
+          <UserFlashcard flashcard={currentCard} />
           <form action="#">
             <div className={styles.inputContainer}>
               <input type="text" id="answer" placeholder="answer" />
@@ -131,7 +134,7 @@ export default function Play() {
           <p className={`${styles.wrongAnswer} ${styles.invisible}`}>
             Incorrect!
           </p>
-          <EnergyMeter energy={0}/>
+          <EnergyMeter energy={0} />
         </div>
         <div className={styles.flashcardDeck}>
           <div className={styles.cardStack}>

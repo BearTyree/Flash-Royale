@@ -194,6 +194,9 @@ export class Room extends DurableObject {
       this.code = (await this.storage.get("code")) || null;
       this.owner = (await this.storage.get("owner")) || null;
       this.name = (await this.storage.get("name")) || null;
+      this.player1Health = (await this.storage.get("player1Health")) || 100;
+      this.player2Health = (await this.storage.get("player2Health")) || 100;
+      this.started = (await this.storage.get("started")) || false;
     });
     this.sessions = new Map();
     this.state.getWebSockets().forEach((webSocket) => {
@@ -230,6 +233,16 @@ export class Room extends DurableObject {
     } catch (error) {
       console.error("Failed to save details to storage:", error);
     }
+  }
+
+  async broadcastMessage(message) {
+    this.sessions.forEach((_, ws) => {
+      try {
+        ws.send(message);
+      } catch (error) {
+        this.sessions.delete(ws);
+      }
+    });
   }
 
   async handleSession(ws) {
@@ -272,44 +285,78 @@ export class Room extends DurableObject {
   async webSocketMessage(ws, message) {
     const { event } = JSON.parse(message);
 
-    switch (event) {
-      case "join": {
-        const { token } = JSON.parse(message);
+    if (!this.started) {
+      switch (event) {
+        case "join": {
+          const { token } = JSON.parse(message);
 
-        const username = await verifyToken(token, this.env);
+          const username = await verifyToken(token, this.env);
 
-        if (!username) {
-          return;
+          if (!username) {
+            return;
+          }
+
+          let session = this.sessions.get(ws) || {};
+          session.username = username;
+          this.sessions.set(ws, session);
+
+          ws.serializeAttachment({ username });
+
+          ws.send(
+            JSON.stringify({
+              event: "details",
+              owner: this.owner,
+              name: this.name,
+            })
+          );
+
+          const registryId = this.env.REGISTRY.idFromName("main");
+          const registryStub = this.env.REGISTRY.get(registryId);
+
+          if (username == this.owner) {
+            await registryStub.enableRoom(this.code);
+
+            ws.send(JSON.stringify({ event: "owner" }));
+
+            return;
+          }
+
+          await registryStub.disableRoom(this.code);
         }
+        case "start": {
+          const session = this.sessions.get(ws);
+          const username = session?.username;
 
-        let session = this.sessions.get(ws) || {};
-        session.username = username;
-        this.sessions.set(ws, session);
-
-        ws.serializeAttachment({ username });
-
-        ws.send(
-          JSON.stringify({
-            event: "details",
-            owner: this.owner,
-            name: this.name,
-          })
-        );
-
-        const registryId = this.env.REGISTRY.idFromName("main");
-        const registryStub = this.env.REGISTRY.get(registryId);
-
-        if (username == this.owner) {
-          await registryStub.enableRoom(this.code);
-
-          ws.send(JSON.stringify({ event: "owner" }));
-
-          return;
+          if (this.owner == username) {
+            const { cards } = JSON.parse(message);
+            this.start(cards);
+          }
         }
-
-        await registryStub.disableRoom(this.code);
+      }
+    } else {
+      switch (event) {
+        case "": {
+        }
       }
     }
+  }
+
+  async start(cards) {
+    this.setHealth(1, 100);
+    this.setHealth(2, 100);
+    this.started = true;
+    this.storage.put("started", true);
+    this.broadcastMessage(JSON.stringify({ event: "start", cards }));
+  }
+
+  async setHealth(player, health) {
+    if (player == 1) {
+      this.player1Health = health;
+      await this.storage.put("player1Heath", health);
+      return;
+    }
+    this.player2Health = health;
+    await this.storage.put("player2Heath", health);
   }
 
   async initializeRoom(roomCode) {
