@@ -31,7 +31,9 @@ export class Registry extends DurableObject {
     this.env = env;
     this.state = state;
     this.storage = state.storage;
-    this.rooms = [];
+    this.state.blockConcurrencyWhile(async () => {
+      this.rooms = (await this.storage.get("rooms")) || [];
+    });
     this.sessions = new Map();
     this.state.getWebSockets().forEach((webSocket) => {
       let meta = webSocket.deserializeAttachment();
@@ -54,9 +56,23 @@ export class Registry extends DurableObject {
     });
   }
 
+  async saveRooms() {
+    try {
+      await this.storage.put("rooms", this.rooms);
+    } catch (error) {
+      console.error("Failed to save rooms to storage:", error);
+    }
+  }
+
   async handleSession(ws) {
     this.state.acceptWebSocket(ws);
     this.sessions.set(ws);
+    const enabledRooms = this.rooms.filter((room) => room.enabled);
+    const message = JSON.stringify({
+      event: "roomList",
+      rooms: enabledRooms,
+    });
+    ws.send(message);
   }
 
   async webSocketClose(ws, code, reason, wasClean) {
@@ -102,6 +118,14 @@ export class Registry extends DurableObject {
     this.broadcastRoomList();
   }
 
+  async disableRoom(code) {
+    const index = this.rooms.findIndex((r) => r.code == code);
+
+    this.rooms[index].enabled = false;
+
+    this.broadcastRoomList();
+  }
+
   async deleteRoom(code) {
     const index = this.rooms.findIndex((r) => r.code == code);
 
@@ -115,6 +139,7 @@ export class Registry extends DurableObject {
   }
 
   broadcastRoomList() {
+    this.saveRooms();
     const enabledRooms = this.rooms.filter((room) => room.enabled);
     const message = JSON.stringify({
       event: "roomList",
@@ -164,9 +189,12 @@ export class Room extends DurableObject {
     super(state, env);
     this.env = env;
     this.state = state;
-    this.code = null;
-    this.owner = null;
-    this.name = null;
+    this.storage = state.storage;
+    this.state.blockConcurrencyWhile(async () => {
+      this.code = (await this.storage.get("code")) || null;
+      this.owner = (await this.storage.get("owner")) || null;
+      this.name = (await this.storage.get("name")) || null;
+    });
     this.sessions = new Map();
     this.state.getWebSockets().forEach((webSocket) => {
       let meta = webSocket.deserializeAttachment();
@@ -194,14 +222,27 @@ export class Room extends DurableObject {
     return new Response(null, { status: 101, webSocket: pair[0] });
   }
 
+  async saveRoomDetails() {
+    try {
+      await this.storage.put("code", this.code);
+      await this.storage.put("owner", this.owner);
+      await this.storage.put("name", this.name);
+    } catch (error) {
+      console.error("Failed to save details to storage:", error);
+    }
+  }
+
   async handleSession(ws) {
     this.state.acceptWebSocket(ws);
     this.sessions.set(ws, {});
   }
 
-  async webSocketClose(ws) {
+  async closeOrError(ws) {
     const session = this.sessions.get(ws);
     const username = session?.username;
+
+    console.log(username);
+    console.log(this.owner);
 
     this.sessions.delete(ws);
 
@@ -209,24 +250,23 @@ export class Room extends DurableObject {
       return;
     }
 
+    const registryId = this.env.REGISTRY.idFromName("main");
+    const registryStub = this.env.REGISTRY.get(registryId);
+
     if (this.owner == username) {
-      deleteRoom(this.code);
+      registryStub.deleteRoom(this.code);
+      return;
     }
+
+    await registryStub.enableRoom(this.code);
   }
 
-  async webSocketError(ws, error) {
-    const session = this.sessions.get(ws);
-    const username = session?.username;
+  async webSocketClose(ws) {
+    this.closeOrError(ws);
+  }
 
-    this.sessions.delete(ws);
-
-    if (!username || !this.owner) {
-      return;
-    }
-
-    if (this.owner == username) {
-      deleteRoom(this.code);
-    }
+  async webSocketError(ws) {
+    this.closeOrError(ws);
   }
 
   async webSocketMessage(ws, message) {
@@ -248,15 +288,6 @@ export class Room extends DurableObject {
 
         ws.serializeAttachment({ username });
 
-        if (username == this.owner) {
-          const registryId = this.env.REGISTRY.idFromName("main");
-          const registryStub = this.env.REGISTRY.get(registryId);
-
-          await registryStub.enableRoom(this.code);
-
-          ws.send(JSON.stringify({ event: "owner" }));
-        }
-
         ws.send(
           JSON.stringify({
             event: "details",
@@ -264,6 +295,19 @@ export class Room extends DurableObject {
             name: this.name,
           })
         );
+
+        const registryId = this.env.REGISTRY.idFromName("main");
+        const registryStub = this.env.REGISTRY.get(registryId);
+
+        if (username == this.owner) {
+          await registryStub.enableRoom(this.code);
+
+          ws.send(JSON.stringify({ event: "owner" }));
+
+          return;
+        }
+
+        await registryStub.disableRoom(this.code);
       }
     }
   }
@@ -278,6 +322,7 @@ export class Room extends DurableObject {
         this.code = roomDetails.code;
         this.owner = roomDetails.owner;
         this.name = roomDetails.name;
+        this.saveRoomDetails();
       }
     } catch (error) {
       console.error("Failed to initialize room details:", error);

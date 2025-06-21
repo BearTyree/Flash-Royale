@@ -12,7 +12,6 @@ export default function RoomClient({ token }) {
   );
 
   ws.addEventListener("open", (event) => {
-    console.log(token);
     ws.send(JSON.stringify({ event: "join", token }));
   });
 

@@ -28,6 +28,33 @@
   font-style: italic;
 }
 
+.room {
+  min-width: 8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  gap: 1rem;
+  background-color: #1f1f1f;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: solid #515151 1px;
+}
+
+.room button {
+  box-sizing: border-box;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  background-color: #363535;
+  border: none;
+  border-radius: 1rem;
+  cursor: pointer;
+}
+
+.room button:hover {
+  background-color: #676767;
+}
+
 .roomsList {
   display: flex;
   width: 100%;

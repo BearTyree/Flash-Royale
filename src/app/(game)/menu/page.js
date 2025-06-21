@@ -1,7 +1,14 @@
 import styles from "@/styles/menu.module.css";
-import Header from "@/components/Header";
 
-export default function Menu() {
+import { cookies } from "next/headers";
+
+import Header from "@/components/Header";
+import Rooms from "./rooms";
+
+export default async function Menu() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value || "";
+
   return (
     <>
       <Header />
@@ -12,9 +19,7 @@ export default function Menu() {
             <h2>Rooms</h2>
             <p>find a room</p>
           </div>
-          <div className={styles.roomsList}></div>
-
-          <button>Create Room</button>
+          <Rooms token={token} />
         </div>
       </div>
     </>
