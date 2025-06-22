@@ -6,6 +6,7 @@ import EnergyMeter from "@/components/play/EnergyMeter";
 import { Flashcard, Set } from "./logic";
 import UserFlashcard from "@/components/play/UserFlashcard";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 // let questionOne = new Flashcard("What's the color of the sky", "Blue", 1);
 // let questionTwo = new Flashcard("What's Bear Tyree's real name", "Trinnean", 9);
@@ -90,10 +91,14 @@ import { useEffect, useState } from "react";
 // });
 
 export default function Play({ flashcards, ws, me, opponent }) {
+  const router = useRouter();
+
   const [currentCard, setCurrentCard] = useState(flashcards[0]);
   const [health, setHealth] = useState(100);
   const [opponentHealth, setOpponentHealth] = useState(100);
   const [xp, setXp] = useState(0);
+  const [answer, setAnswer] = useState("");
+  const [numCorrect, setNumCorrect] = useState(0);
 
   useEffect(() => {
     ws.addEventListener("message", (message) => {
@@ -112,6 +117,7 @@ export default function Play({ flashcards, ws, me, opponent }) {
           } else {
             setOpponentHealth(two[1]);
           }
+          break;
         }
         case "xps": {
           const { one, two } = JSON.parse(message.data);
@@ -121,10 +127,29 @@ export default function Play({ flashcards, ws, me, opponent }) {
           if (two[0] == me) {
             setXp(two[1]);
           }
+          break;
+        }
+        case "end": {
+          const { one, two } = JSON.parse(message.data);
+          if (one[0] == me) {
+            if (one[1] == "win") {
+              router.push(`/win`);
+            } else {
+              router.push(`/lose`);
+            }
+          }
+          if (two[0] == me) {
+            if (two[1] == "win") {
+              router.push(`/win`);
+            } else {
+              router.push(`/lose`);
+            }
+          }
+          break;
         }
       }
     });
-  }, [ws, me]);
+  }, [ws, me, router]);
 
   return (
     <>
@@ -155,11 +180,25 @@ export default function Play({ flashcards, ws, me, opponent }) {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              ws.send(JSON.stringify({ event: "correct" }));
+              if (answer == currentCard.definition) {
+                ws.send(JSON.stringify({ event: "correct" }));
+                setCurrentCard(
+                  flashcards[(numCorrect + 1) % flashcards.length]
+                );
+                setNumCorrect((p) => p + 1);
+                setAnswer("");
+              }
+              setAnswer("");
             }}
           >
             <div className={styles.inputContainer}>
-              <input type="text" id="answer" placeholder="answer" />
+              <input
+                type="text"
+                id="answer"
+                placeholder="answer"
+                value={answer}
+                onChange={(e) => setAnswer(e.target.value)}
+              />
               <button type="submit">
                 <Image
                   src={"/arrow-right-circle.svg"}
@@ -201,7 +240,7 @@ export default function Play({ flashcards, ws, me, opponent }) {
 
         <div className={styles.healthContainerOpponent}>
           <div className={styles.healthInfo}>
-            <p className={styles.healthText}>{opponentHealth}</p>
+            <p className={styles.healthText}>{opponentHealth} %</p>
             <div className={styles.healthBar}>
               <div className={styles.health}></div>
             </div>
@@ -210,7 +249,7 @@ export default function Play({ flashcards, ws, me, opponent }) {
 
         <div className={styles.healthContainerUser}>
           <div className={styles.healthInfo}>
-            <p className={styles.healthText}>{health}</p>
+            <p className={styles.healthText}>{health} %</p>
             <div className={styles.healthBar}>
               <div className={styles.health}></div>
             </div>

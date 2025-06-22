@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 
-import Play from "@/components/play/play.js";
+import Play from "@/components/play/Play.js";
 
 export default function RoomClient({ token, cardSets }) {
   const [owner, setOwner] = useState(null);

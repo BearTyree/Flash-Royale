@@ -356,13 +356,13 @@ export class Room extends DurableObject {
           const username = session?.username;
 
           if (this.owner == username) {
-            if (this.player1Xp > 0) {
+            if (this.player1Xp > 0 && this.player1Health < 100) {
               this.setHealth(1, this.player1Health + 10);
               this.setXp(1, this.player1Xp - 1);
             }
             return;
           }
-          if (this.player2Xp > 0) {
+          if (this.player2Xp > 0 && this.player2Health < 100) {
             this.setHealth(2, this.player2Health + 10);
             this.setXp(2, this.player2Xp - 1);
           }
@@ -426,6 +426,15 @@ export class Room extends DurableObject {
           two: [nonOwnerPlayer, this.player2Health],
         })
       );
+      if (this.player1Health <= 0) {
+        this.broadcastMessage(
+          JSON.stringify({
+            event: "end",
+            one: [this.owner, "lose"],
+            two: [nonOwnerPlayer, "win"],
+          })
+        );
+      }
       return;
     }
     this.player2Health = health;
@@ -437,6 +446,15 @@ export class Room extends DurableObject {
         two: [nonOwnerPlayer, this.player2Health],
       })
     );
+    if (this.player2Health <= 0) {
+      this.broadcastMessage(
+        JSON.stringify({
+          event: "end",
+          one: [this.owner, "win"],
+          two: [nonOwnerPlayer, "lose"],
+        })
+      );
+    }
   }
 
   async setXp(player, xp) {
