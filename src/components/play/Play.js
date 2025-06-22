@@ -5,7 +5,7 @@ import Image from "next/image";
 import EnergyMeter from "@/components/play/EnergyMeter";
 import { Flashcard, Set } from "./logic";
 import UserFlashcard from "@/components/play/UserFlashcard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // let questionOne = new Flashcard("What's the color of the sky", "Blue", 1);
 // let questionTwo = new Flashcard("What's Bear Tyree's real name", "Trinnean", 9);
@@ -89,8 +89,42 @@ import { useState } from "react";
 //   }
 // });
 
-export default function Play({ flashcards }) {
+export default function Play({ flashcards, ws, me, opponent }) {
   const [currentCard, setCurrentCard] = useState(flashcards[0]);
+  const [health, setHealth] = useState(100);
+  const [opponentHealth, setOpponentHealth] = useState(100);
+  const [xp, setXp] = useState(0);
+
+  useEffect(() => {
+    ws.addEventListener("message", (message) => {
+      const { event } = JSON.parse(message.data);
+
+      switch (event) {
+        case "healths": {
+          const { one, two } = JSON.parse(message.data);
+          if (one[0] == me) {
+            setHealth(one[1]);
+          } else {
+            setOpponentHealth(one[1]);
+          }
+          if (two[0] == me) {
+            setHealth(two[1]);
+          } else {
+            setOpponentHealth(two[1]);
+          }
+        }
+        case "xps": {
+          const { one, two } = JSON.parse(message.data);
+          if (one[0] == me) {
+            setXp(one[1]);
+          }
+          if (two[0] == me) {
+            setXp(two[1]);
+          }
+        }
+      }
+    });
+  }, [ws, me]);
 
   return (
     <>
@@ -103,7 +137,7 @@ export default function Play({ flashcards }) {
             width={48}
             height={48}
           ></Image>
-          <h3>Player 2</h3>
+          <h3>{opponent}</h3>
         </div>
         <div className={styles.userProfile}>
           <Image
@@ -113,12 +147,17 @@ export default function Play({ flashcards }) {
             width={48}
             height={48}
           ></Image>
-          <h3>Player 1</h3>
+          <h3>{me}</h3>
         </div>
 
         <div className={styles.playerContainer}>
           <UserFlashcard flashcard={currentCard} />
-          <form action="#">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              ws.send(JSON.stringify({ event: "correct" }));
+            }}
+          >
             <div className={styles.inputContainer}>
               <input type="text" id="answer" placeholder="answer" />
               <button type="submit">
@@ -134,7 +173,7 @@ export default function Play({ flashcards }) {
           <p className={`${styles.wrongAnswer} ${styles.invisible}`}>
             Incorrect!
           </p>
-          <EnergyMeter energy={0} />
+          <EnergyMeter energy={xp} />
         </div>
         <div className={styles.flashcardDeck}>
           <div className={styles.cardStack}>
@@ -143,17 +182,26 @@ export default function Play({ flashcards }) {
             </div>
             <div className={`${styles.card} ${styles.cardBottom}`}></div>
           </div>
-          <p>14 Cards Remaining</p>
         </div>
         <div className={styles.actionContainer}>
-          <div className={styles.attack}>Attack</div>
-          <div className={styles.defend}>Defend</div>
-          <div className={styles.special}>Special</div>
+          <div
+            onClick={() => ws.send(JSON.stringify({ event: "attack" }))}
+            className={styles.attack}
+          >
+            Attack
+          </div>
+          <div
+            onClick={() => ws.send(JSON.stringify({ event: "heal" }))}
+            className={styles.defend}
+          >
+            Heal
+          </div>
+          <div className={styles.special}>Skip</div>
         </div>
 
         <div className={styles.healthContainerOpponent}>
           <div className={styles.healthInfo}>
-            <p className={styles.healthText}>100%</p>
+            <p className={styles.healthText}>{opponentHealth}</p>
             <div className={styles.healthBar}>
               <div className={styles.health}></div>
             </div>
@@ -162,7 +210,7 @@ export default function Play({ flashcards }) {
 
         <div className={styles.healthContainerUser}>
           <div className={styles.healthInfo}>
-            <p className={styles.healthText}>100%</p>
+            <p className={styles.healthText}>{health}</p>
             <div className={styles.healthBar}>
               <div className={styles.health}></div>
             </div>

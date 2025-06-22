@@ -196,6 +196,8 @@ export class Room extends DurableObject {
       this.name = (await this.storage.get("name")) || null;
       this.player1Health = (await this.storage.get("player1Health")) || 100;
       this.player2Health = (await this.storage.get("player2Health")) || 100;
+      this.player1Xp = (await this.storage.get("player1Xp")) || 0;
+      this.player2Xp = (await this.storage.get("player2Xp")) || 0;
       this.started = (await this.storage.get("started")) || false;
     });
     this.sessions = new Map();
@@ -253,9 +255,6 @@ export class Room extends DurableObject {
   async closeOrError(ws) {
     const session = this.sessions.get(ws);
     const username = session?.username;
-
-    console.log(username);
-    console.log(this.owner);
 
     this.sessions.delete(ws);
 
@@ -335,7 +334,50 @@ export class Room extends DurableObject {
       }
     } else {
       switch (event) {
-        case "": {
+        case "attack": {
+          const session = this.sessions.get(ws);
+          const username = session?.username;
+
+          if (this.owner == username) {
+            if (this.player1Xp > 0) {
+              this.setHealth(2, this.player2Health - 10);
+              this.setXp(1, this.player1Xp - 1);
+            }
+            return;
+          }
+          if (this.player2Xp > 0) {
+            this.setHealth(1, this.player1Health - 10);
+            this.setXp(2, this.player2Xp - 1);
+          }
+          break;
+        }
+        case "heal": {
+          const session = this.sessions.get(ws);
+          const username = session?.username;
+
+          if (this.owner == username) {
+            if (this.player1Xp > 0) {
+              this.setHealth(1, this.player1Health + 10);
+              this.setXp(1, this.player1Xp - 1);
+            }
+            return;
+          }
+          if (this.player2Xp > 0) {
+            this.setHealth(2, this.player2Health + 10);
+            this.setXp(2, this.player2Xp - 1);
+          }
+          break;
+        }
+        case "correct": {
+          const session = this.sessions.get(ws);
+          const username = session?.username;
+
+          if (this.owner == username) {
+            this.setXp(1, this.player1Xp + 1);
+            return;
+          }
+          this.setXp(2, this.player2Xp + 1);
+          break;
         }
       }
     }
@@ -344,19 +386,88 @@ export class Room extends DurableObject {
   async start(cards) {
     this.setHealth(1, 100);
     this.setHealth(2, 100);
+    this.setXp(1, 0);
+    this.setXp(2, 0);
     this.started = true;
     this.storage.put("started", true);
-    this.broadcastMessage(JSON.stringify({ event: "start", cards }));
+
+    let nonOwnerPlayer = null;
+    for (const [ws, session] of this.sessions) {
+      if (session.username && session.username !== this.owner) {
+        nonOwnerPlayer = session.username;
+        break;
+      }
+    }
+    this.broadcastMessage(
+      JSON.stringify({
+        event: "start",
+        cards,
+        owner: this.owner,
+        player: nonOwnerPlayer,
+      })
+    );
   }
 
   async setHealth(player, health) {
+    let nonOwnerPlayer = null;
+    for (const [ws, session] of this.sessions) {
+      if (session.username && session.username !== this.owner) {
+        nonOwnerPlayer = session.username;
+        break;
+      }
+    }
     if (player == 1) {
       this.player1Health = health;
       await this.storage.put("player1Heath", health);
+      this.broadcastMessage(
+        JSON.stringify({
+          event: "healths",
+          one: [this.owner, this.player1Health],
+          two: [nonOwnerPlayer, this.player2Health],
+        })
+      );
       return;
     }
     this.player2Health = health;
     await this.storage.put("player2Heath", health);
+    this.broadcastMessage(
+      JSON.stringify({
+        event: "healths",
+        one: [this.owner, this.player1Health],
+        two: [nonOwnerPlayer, this.player2Health],
+      })
+    );
+  }
+
+  async setXp(player, xp) {
+    let nonOwnerPlayer = null;
+    for (const [ws, session] of this.sessions) {
+      if (session.username && session.username !== this.owner) {
+        nonOwnerPlayer = session.username;
+        break;
+      }
+    }
+    if (player == 1) {
+      this.player1Xp = xp;
+      await this.storage.put("player1Xp", xp);
+      this.broadcastMessage(
+        JSON.stringify({
+          event: "xps",
+          one: [this.owner, this.player1Xp],
+          two: [nonOwnerPlayer, this.player2Xp],
+        })
+      );
+      return;
+    }
+    this.player2Xp = xp;
+    await this.storage.put("player2Xp", xp);
+    this.broadcastMessage(
+      JSON.stringify({
+        event: "xps",
+        one: [this.owner, this.player1Xp],
+        two: [nonOwnerPlayer, this.player2Xp],
+      })
+    );
   }
 
   async initializeRoom(roomCode) {

@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 
-import Play from "@/components/play/play";
+import Play from "@/components/play/play.js";
 
 export default function RoomClient({ token, cardSets }) {
   const [owner, setOwner] = useState(null);
@@ -13,6 +13,8 @@ export default function RoomClient({ token, cardSets }) {
   const [cards, setCards] = useState(
     cardSets[0] ? JSON.parse(cardSets[0].cards) : null
   );
+  const [me, setMe] = useState(null);
+  const [opponent, setOpponent] = useState(null);
 
   const params = useParams();
   const code = params.code;
@@ -45,13 +47,19 @@ export default function RoomClient({ token, cardSets }) {
           break;
         }
         case "start": {
-          const { cards: cardsData } = JSON.parse(message.data);
+          const {
+            cards: cardsData,
+            owner: ownerData,
+            player: playerData,
+          } = JSON.parse(message.data);
+          setMe(ownRoom ? ownerData : playerData);
+          setOpponent(ownRoom ? playerData : ownerData);
           setCards(cardsData);
           setStarted(true);
         }
       }
     });
-  }, [code, token]);
+  }, [code, token, ownRoom]);
 
   if (!started) {
     return (
@@ -89,7 +97,12 @@ export default function RoomClient({ token, cardSets }) {
   }
   return (
     <>
-      <Play flashcards={cards.flashcards} />
+      <Play
+        me={me}
+        opponent={opponent}
+        ws={wsRef.current}
+        flashcards={cards.flashcards}
+      />
     </>
   );
 }
