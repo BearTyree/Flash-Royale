@@ -5,7 +5,8 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "flash-royale",
-  "main": "./entry.js",
+  // "main": ".open-next/worker.js",
+  "main": "./durableObjects.js",
   "compatibility_date": "2025-03-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": {
@@ -14,6 +15,9 @@
   },
   "observability": {
     "enabled": true
+  },
+  "vars": {
+    "NEXT_PUBLIC_WS_SERVER": "/api"
   },
   "d1_databases": [
     {

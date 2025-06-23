@@ -1,0 +1,198 @@
+.titleContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  flex-direction: column;
+  background-color: #1f1f1f;
+  position: relative;
+  overflow: hidden;
+}
+
+.titleContainer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+      circle at 20% 80%,
+      rgba(54, 53, 53, 0.4) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(89, 89, 89, 0.3) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 40% 40%,
+      rgba(103, 103, 103, 0.2) 0%,
+      transparent 50%
+    );
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.8),
+      0 0 40px rgba(255, 255, 255, 0.3);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.titleContainer h1 {
+  font-size: clamp(4rem, 10vw, 10rem);
+  margin-bottom: 2rem;
+  font-style: italic;
+  font-weight: 900;
+  background: linear-gradient(45deg, #fff, #f0f0f0, #fff);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: glow 3s ease-in-out infinite, slideUp 1s ease-out;
+  text-align: center;
+  z-index: 2;
+  position: relative;
+}
+
+.titleContainer h3 {
+  margin-bottom: 3rem;
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  font-weight: 300;
+  text-align: center;
+  opacity: 0.9;
+  animation: slideUp 1s ease-out 0.3s both;
+  z-index: 2;
+  position: relative;
+}
+
+.titleContainer p {
+  margin-bottom: 8rem;
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  text-align: center;
+  animation: slideUp 1s ease-out 0.6s both;
+  z-index: 2;
+  position: relative;
+}
+
+.titleContainer p a {
+  color: #fff;
+  text-decoration: none;
+  padding: 0.8rem 2rem;
+  margin: 0 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  display: inline-block;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.titleContainer p a:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.titleContainer p a:active {
+  transform: translateY(0);
+}
+
+/* Floating cards animation */
+.titleContainer::after {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 140px;
+  background: rgba(54, 53, 53, 0.6);
+  border-radius: 12px;
+  top: 20%;
+  left: 10%;
+  animation: floatCard 8s ease-in-out infinite;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(103, 103, 103, 0.4);
+}
+
+@keyframes floatCard {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0.6;
+  }
+  25% {
+    transform: translate(50px, -30px) rotate(5deg);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate(100px, 0) rotate(-3deg);
+    opacity: 0.4;
+  }
+  75% {
+    transform: translate(50px, 30px) rotate(2deg);
+    opacity: 0.7;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .titleContainer {
+    padding: 2rem;
+  }
+
+  .titleContainer h1 {
+    margin-bottom: 1.5rem;
+  }
+
+  .titleContainer h3 {
+    margin-bottom: 2rem;
+  }
+
+  .titleContainer p {
+    margin-bottom: 4rem;
+  }
+
+  .titleContainer p a {
+    display: block;
+    margin: 0.5rem 0;
+    padding: 1rem 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .titleContainer p a {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.9rem;
+  }
+}

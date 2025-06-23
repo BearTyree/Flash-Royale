@@ -6,6 +6,11 @@ import { notFound } from "next/navigation";
 import { getDbAsync } from "@/lib/drizzle";
 import { eq } from "drizzle-orm";
 
+export const metadata = {
+  title: "Flash Royale",
+  description: "Flashcard based learning game.",
+};
+
 export default async function Edit({ params }) {
   const db = await getDbAsync();
 

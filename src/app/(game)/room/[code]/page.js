@@ -3,6 +3,11 @@ import RoomClient from "./room";
 import { getDbAsync } from "@/lib/drizzle";
 import { authenticated } from "@/controllers/auth";
 
+export const metadata = {
+  title: "Flash Royale",
+  description: "Flashcard based learning game.",
+};
+
 export default async function Room() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value || "";
