@@ -44,6 +44,11 @@ export default function Rooms({ token }) {
   return (
     <>
       <div className={styles.roomsList}>
+        {rooms.length == 0 && 
+        <p className={styles.noRoomsText}>
+          no rooms available
+        </p>
+        }
         {rooms?.map((room) => (
           <div key={room.code} className={styles.room}>
             <p className={styles.roomName}>{room.name}</p>

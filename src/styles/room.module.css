@@ -1,0 +1,86 @@
+.roomContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 2rem;
+    max-height: 100vh;
+}
+
+.setContainer, .setContainerSelected {
+  background-color: #3a3a3a;
+  border-radius: 1rem;
+  padding: 1rem;
+  width: 75%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.setContainerSelected {
+    border: 1px solid rgb(201, 201, 201);
+}
+
+.setViewerContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  background-color: transparent;
+  max-height: 100%;
+  width: 100%;
+  padding: 1rem 0rem 0.5rem 0rem;
+  overflow-y: scroll;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.roomContainer form {
+    width: 50%;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.setContainer button, .setContainerSelected button {
+  text-decoration: none;
+  background-color: #005994;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  border-radius: 2rem;
+  cursor: pointer;
+  border: none;
+}
+
+.setContainer button:hover, .setContainerSelected button:hover {
+  background-color: #007dd0;
+}
+
+.startButton {
+  text-decoration: none;
+  background-color: #005994;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  border-radius: 2rem;
+  cursor: pointer;
+  border: none;
+  font-size: 1.25rem;
+}
+
+.startButton:hover {
+  background-color: #007dd0;
+}
+
+.setSearch {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem;
+  border-radius: 0;
+  background-color: transparent;
+  border-width: 0 0 3px 0;
+  border-color: #005994;
+  border-style: solid;
+}
+
+.setSearch:focus {
+  outline: none;
+}

@@ -13,7 +13,7 @@
 }
 
 .roomsContainer {
-  width: 30rem;
+  width: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -78,4 +78,10 @@
 
 .roomsContainer button:hover {
   background-color: #0071bd;
+}
+
+.noRoomsText {
+  font-style: italic;
+  margin: 0 auto;
+  color: grey;
 }
