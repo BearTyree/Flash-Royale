@@ -398,6 +398,7 @@ export class Room extends DurableObject {
         break;
       }
     }
+
     this.broadcastMessage(
       JSON.stringify({
         event: "start",

@@ -8,7 +8,6 @@ import Play from "@/components/play/Play.js";
 export default function RoomClient({ token, cardSets }) {
   const [owner, setOwner] = useState(null);
   const [name, setName] = useState(null);
-  const [ownRoom, setOwnRoom] = useState(false);
   const [started, setStarted] = useState(false);
   const [cards, setCards] = useState(
     cardSets[0] ? JSON.parse(cardSets[0].cards) : null
@@ -19,6 +18,7 @@ export default function RoomClient({ token, cardSets }) {
   const params = useParams();
   const code = params.code;
   const wsRef = useRef(null);
+  const ownRoom = useRef(false);
 
   useEffect(() => {
     const ws = new WebSocket(
@@ -43,7 +43,7 @@ export default function RoomClient({ token, cardSets }) {
           break;
         }
         case "owner": {
-          setOwnRoom(true);
+          ownRoom.current = true;
           break;
         }
         case "start": {
@@ -52,14 +52,14 @@ export default function RoomClient({ token, cardSets }) {
             owner: ownerData,
             player: playerData,
           } = JSON.parse(message.data);
-          setMe(ownRoom ? ownerData : playerData);
-          setOpponent(ownRoom ? playerData : ownerData);
+          setMe(ownRoom.current ? ownerData : playerData);
+          setOpponent(ownRoom.current ? playerData : ownerData);
           setCards(cardsData);
           setStarted(true);
         }
       }
     });
-  }, [code, token, ownRoom]);
+  }, [code, token]);
 
   if (!started) {
     return (
