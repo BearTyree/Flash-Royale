@@ -1,4 +1,5 @@
 import Link from "next/link";
+import styles from "@/styles/result.module.css";
 
 export const metadata = {
   title: "Flash Royale",
@@ -8,7 +9,17 @@ export const metadata = {
 export default function Win() {
   return (
     <>
-      You Won <Link href="/menu">Return to Menu</Link>
+      <div className={styles.Container}>
+        <div className={styles.messageContainer}>
+          <div className={styles.winMessage}>
+            <h1>Victory</h1>
+            <h3>You Won!</h3>
+          </div>
+          <Link href="/menu">
+            <button>Return to Menu</button>
+          </Link>
+        </div>
+      </div>
     </>
   );
 }

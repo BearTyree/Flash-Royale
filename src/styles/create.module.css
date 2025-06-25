@@ -119,7 +119,7 @@
 }
 
 .flashcardInput textarea:focus,
-.flashcard-input input:focus {
+.flashcardInput input:focus {
   outline: none;
 }
 

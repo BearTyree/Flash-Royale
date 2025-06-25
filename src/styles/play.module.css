@@ -127,6 +127,10 @@
     border-radius: 1rem;
 }
 
+.healthText {
+    text-wrap: none;
+}
+
 /* Player Profiles */
 
 .opponentProfile, .userProfile {

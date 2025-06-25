@@ -240,7 +240,7 @@ export default function Play({ flashcards, ws, me, opponent }) {
 
         <div className={styles.healthContainerOpponent}>
           <div className={styles.healthInfo}>
-            <p className={styles.healthText}>{opponentHealth} %</p>
+            <p className={styles.healthText}>{opponentHealth}%</p>
             <div className={styles.healthBar}>
               <div className={styles.health}></div>
             </div>
@@ -249,7 +249,7 @@ export default function Play({ flashcards, ws, me, opponent }) {
 
         <div className={styles.healthContainerUser}>
           <div className={styles.healthInfo}>
-            <p className={styles.healthText}>{health} %</p>
+            <p className={styles.healthText}>{health}%</p>
             <div className={styles.healthBar}>
               <div className={styles.health}></div>
             </div>

@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
+import styles from "@/styles/room.module.css";
 
 import Play from "@/components/play/Play.js";
 
@@ -12,6 +13,7 @@ export default function RoomClient({ token, cardSets }) {
   const [cards, setCards] = useState(
     cardSets[0] ? JSON.parse(cardSets[0].cards) : null
   );
+  const [currentID, setID] = useState(cardSets[0].id);
   const [me, setMe] = useState(null);
   const [opponent, setOpponent] = useState(null);
 
@@ -63,25 +65,36 @@ export default function RoomClient({ token, cardSets }) {
 
   if (!started) {
     return (
-      <>
-        {name}
-        <br />
+      <div className={styles.roomContainer}>
+        <h1>{name}</h1>
         {ownRoom && (
-          <div>
-            {cardSets.map((set) => (
-              <div key={set.id}>
-                {JSON.parse(set.cards).name}
-                <br />
-                <button
-                  onClick={() => {
-                    setCards(JSON.parse(set.cards));
-                  }}
-                >
-                  Use Set
-                </button>
-              </div>
-            ))}
+          <>
+            <form action="">
+                      <input
+                        type="text"
+                        placeholder="search sets"
+                        className={styles.setSearch}
+                      />
+            </form>
+            <div className={styles.setViewerContainer}>
+              
+              {cardSets.map((set) => (
+                <div className={set.id == currentID ? styles.setContainerSelected : styles.setContainer} key={set.id}>
+                  <h3>{JSON.parse(set.cards).name}</h3>
+                  <h4>{JSON.parse(set.cards).length} cards</h4>
+                  <button
+                    onClick={() => {
+                      setCards(JSON.parse(set.cards));
+                      setID(set.id);
+                    }}
+                  >
+                    Use Set
+                  </button>
+                </div>
+              ))}
+            </div>
             <button
+              className={styles.startButton}
               onClick={() =>
                 wsRef.current.send(
                   JSON.stringify({ event: "start", cards: cards })
@@ -90,9 +103,9 @@ export default function RoomClient({ token, cardSets }) {
             >
               Start
             </button>
-          </div>
+          </>
         )}
-      </>
+      </div>
     );
   }
   return (

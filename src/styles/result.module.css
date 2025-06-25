@@ -1,0 +1,64 @@
+.Container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.messageContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #363535;
+  box-sizing: border-box;
+  padding: 2rem;
+  border-radius: 1rem;
+  border: solid 1px grey;
+  gap: 2rem;
+}
+
+.winMessage,
+.loseMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.winMessage h1 {
+  color: gold;
+  font-size: 4rem;
+}
+
+.winMessage h3 {
+  font-size: 1.25rem;
+  font-style: italic;
+  color: rgb(216, 184, 0);
+}
+
+.loseMessage h1 {
+  color: rgb(218, 0, 0);
+  font-size: 4rem;
+}
+
+.loseMessage h3 {
+  font-size: 1.25rem;
+  font-style: italic;
+  color: rgb(175, 0, 0);
+}
+
+.messageContainer button {
+  text-decoration: none;
+  background-color: #005994;
+  padding: 0.75rem 1rem 0.75rem 1rem;
+  border-radius: 2rem;
+  cursor: pointer;
+  border: none;
+  font-size: 1rem;
+}
+
+.messageContainer button:hover {
+  background-color: #007dd0;
+}
