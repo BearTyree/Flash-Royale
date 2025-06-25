@@ -5,7 +5,7 @@ import styles from "@/styles/menu.module.css";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function Rooms({ token }) {
+export default function Rooms({ token, cardSetsLength }) {
   const [rooms, setRooms] = useState([]);
   const wsRef = useRef(null);
 
@@ -44,11 +44,9 @@ export default function Rooms({ token }) {
   return (
     <>
       <div className={styles.roomsList}>
-        {rooms.length == 0 && 
-        <p className={styles.noRoomsText}>
-          no rooms available
-        </p>
-        }
+        {rooms.length == 0 && (
+          <p className={styles.noRoomsText}>no rooms available</p>
+        )}
         {rooms?.map((room) => (
           <div key={room.code} className={styles.room}>
             <p className={styles.roomName}>{room.name}</p>
@@ -62,7 +60,14 @@ export default function Rooms({ token }) {
       <button
         onClick={() => {
           if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-            wsRef.current.send(JSON.stringify({ event: "newRoom", token }));
+            if (cardSetsLength > 0) {
+              wsRef.current.send(JSON.stringify({ event: "newRoom", token }));
+            } else {
+              alert(
+                "You must have at least one flashcard set created in order to start a room."
+              );
+              router.push("/sets");
+            }
           }
         }}
       >

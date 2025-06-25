@@ -43,7 +43,7 @@ export async function authenticate(previousState, formData) {
     path: "/",
   });
 
-  redirect("/menu");
+  redirect("/sets");
 }
 
 export async function logout() {
@@ -89,7 +89,7 @@ export async function createUser(previousState, formData) {
     console.log(error);
     return;
   }
-  redirect("/menu");
+  redirect("/sets");
 }
 
 export async function checkToken() {

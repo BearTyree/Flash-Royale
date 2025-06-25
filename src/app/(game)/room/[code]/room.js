@@ -21,6 +21,7 @@ export default function RoomClient({ token, cardSets }) {
   const code = params.code;
   const wsRef = useRef(null);
   const ownRoom = useRef(false);
+  const [ownRoomState, setOwnRoomState] = useState(false);
 
   useEffect(() => {
     const ws = new WebSocket(
@@ -46,6 +47,7 @@ export default function RoomClient({ token, cardSets }) {
         }
         case "owner": {
           ownRoom.current = true;
+          setOwnRoomState(true);
           break;
         }
         case "start": {
@@ -58,6 +60,12 @@ export default function RoomClient({ token, cardSets }) {
           setOpponent(ownRoom.current ? playerData : ownerData);
           setCards(cardsData);
           setStarted(true);
+          break;
+        }
+        case "playerAmountError": {
+          alert(
+            "Must have another player in the room to start. If you already have two players please attempt to create new room."
+          );
         }
       }
     });
@@ -67,19 +75,25 @@ export default function RoomClient({ token, cardSets }) {
     return (
       <div className={styles.roomContainer}>
         <h1>{name}</h1>
-        {ownRoom && (
+        {ownRoomState && (
           <>
             <form action="">
-                      <input
-                        type="text"
-                        placeholder="search sets"
-                        className={styles.setSearch}
-                      />
+              <input
+                type="text"
+                placeholder="search sets"
+                className={styles.setSearch}
+              />
             </form>
             <div className={styles.setViewerContainer}>
-              
               {cardSets.map((set) => (
-                <div className={set.id == currentID ? styles.setContainerSelected : styles.setContainer} key={set.id}>
+                <div
+                  className={
+                    set.id == currentID
+                      ? styles.setContainerSelected
+                      : styles.setContainer
+                  }
+                  key={set.id}
+                >
                   <h3>{JSON.parse(set.cards).name}</h3>
                   <h4>{JSON.parse(set.cards).length} cards</h4>
                   <button

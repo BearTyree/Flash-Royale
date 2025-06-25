@@ -327,8 +327,12 @@ export class Room extends DurableObject {
           const username = session?.username;
 
           if (this.owner == username) {
-            const { cards } = JSON.parse(message);
-            this.start(cards);
+            if (this.sessions.size == 2) {
+              const { cards } = JSON.parse(message);
+              this.start(cards);
+            } else {
+              ws.send(JSON.stringify({ event: "playerAmountError" }));
+            }
           }
         }
       }
