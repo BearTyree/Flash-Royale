@@ -59,6 +59,7 @@ export class Registry extends DurableObject {
   async saveRooms() {
     try {
       await this.storage.put("rooms", this.rooms);
+      console.log(this.rooms);
     } catch (error) {
       console.error("Failed to save rooms to storage:", error);
     }
@@ -85,7 +86,8 @@ export class Registry extends DurableObject {
 
   async webSocketMessage(ws, message, env) {
     const { event } = JSON.parse(message);
-
+    // await this.resetRegistry();
+    // return;
     switch (event) {
       case "newRoom": {
         const { token } = JSON.parse(message);
@@ -96,6 +98,14 @@ export class Registry extends DurableObject {
           return;
         }
 
+        if (!this.rooms) {
+          this.rooms = [];
+        }
+
+        let oldRoom = this.rooms.findIndex((r) => r.owner == username);
+        if (oldRoom !== -1) {
+          this.rooms.splice(oldRoom, 1);
+        }
         const code = generateRoomCode(this.rooms);
 
         this.rooms.push({
@@ -106,12 +116,26 @@ export class Registry extends DurableObject {
         });
 
         ws.send(JSON.stringify({ event: "roomCode", code }));
+
+        await this.saveRooms();
+
+        break;
       }
     }
   }
 
   async enableRoom(code) {
+    if (!this.rooms) {
+      this.rooms = [];
+      return;
+    }
+
     const index = this.rooms.findIndex((r) => r.code == code);
+
+    if (index === -1) {
+      console.error(`Room with code ${code} not found for enabling`);
+      return;
+    }
 
     this.rooms[index].enabled = true;
 
@@ -119,6 +143,11 @@ export class Registry extends DurableObject {
   }
 
   async disableRoom(code) {
+    if (!this.rooms) {
+      this.rooms = [];
+      return;
+    }
+
     const index = this.rooms.findIndex((r) => r.code == code);
 
     this.rooms[index].enabled = false;
@@ -126,7 +155,17 @@ export class Registry extends DurableObject {
     this.broadcastRoomList();
   }
 
+  async resetRegistry() {
+    this.rooms = [];
+    await this.saveRooms();
+  }
+
   async deleteRoom(code) {
+    if (!this.rooms) {
+      this.rooms = [];
+      return;
+    }
+
     const index = this.rooms.findIndex((r) => r.code == code);
 
     this.rooms.splice(index, 1);
@@ -326,8 +365,20 @@ export class Room extends DurableObject {
           const session = this.sessions.get(ws);
           const username = session?.username;
 
+          let nonOwnerPlayer = null;
+          for (const [ws, session] of this.sessions) {
+            if (session.username && session.username !== this.owner) {
+              nonOwnerPlayer = session.username;
+              break;
+            }
+          }
+
           if (this.owner == username) {
             if (this.sessions.size == 2) {
+              if (!nonOwnerPlayer) {
+                ws.send(JSON.stringify({ event: "noSelfGames" }));
+                return;
+              }
               const { cards } = JSON.parse(message);
               this.start(cards);
             } else {

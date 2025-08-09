@@ -13,7 +13,7 @@ export default function RoomClient({ token, cardSets }) {
   const [cards, setCards] = useState(
     cardSets[0] ? JSON.parse(cardSets[0].cards) : null
   );
-  const [currentID, setID] = useState(cardSets[0].id);
+  const [currentID, setID] = useState(cardSets[0]?.id || null);
   const [me, setMe] = useState(null);
   const [opponent, setOpponent] = useState(null);
 
@@ -66,6 +66,11 @@ export default function RoomClient({ token, cardSets }) {
           alert(
             "Must have another player in the room to start. If you already have two players please attempt to create new room."
           );
+          break;
+        }
+        case "noSelfGames": {
+          alert("You cannot play a game against yourself.");
+          break;
         }
       }
     });
